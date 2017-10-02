@@ -60,6 +60,7 @@
     clean_session = false   :: boolean(),
     last_will_topic         :: string() | undefined,
     last_will_msg           :: string() | undefined,
+    last_will_retain        :: boolean() | undefined,
     last_will_qos           :: non_neg_integer(),
     buffer = <<>>           :: binary(),
     reconnect_timeout,
@@ -294,6 +295,7 @@ init([Mod, Args, Opts]) ->
     LWTopic = proplists:get_value(last_will_topic, Opts, undefined),
     LWMsg = proplists:get_value(last_will_msg, Opts, undefined),
     LWQos = proplists:get_value(last_will_qos, Opts, 0),
+    LWRet = proplists:get_value(last_will_retain, Opts, undefined),
     ReconnectTimeout = proplists:get_value(reconnect_timeout, Opts, undefined),
     KeepAliveInterval = proplists:get_value(keepalive_interval, Opts, 60),
     RetryInterval = proplists:get_value(retry_interval, Opts, 10),
@@ -304,7 +306,7 @@ init([Mod, Args, Opts]) ->
 
     State = #state{host = Host, port = Port, proto_version=ProtoVer,
         username = Username, password = Password, client=ClientId, mod=Mod,
-        clean_session=CleanSession, last_will_topic=LWTopic, last_will_msg=LWMsg, last_will_qos=LWQos,
+        clean_session=CleanSession, last_will_topic=LWTopic, last_will_msg=LWMsg, last_will_qos=LWQos, last_will_retain=LWRet,
         reconnect_timeout=case ReconnectTimeout of undefined -> undefined; _ -> 1000 * ReconnectTimeout end,
         keepalive_interval=1000 * KeepAliveInterval,
         retry_interval=1000* RetryInterval, transport={Transport, TransportOpts},
@@ -528,7 +530,7 @@ code_change(OldVsn, StateName, State, Extra) ->
 %%% INTERNAL
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 send_connect(State= #state{transport={Transport, _}, sock=Sock, username=Username, password=Password, client=ClientId,
-    clean_session=CleanSession, last_will_topic=LWTopic, last_will_msg=LWMsg,
+    clean_session=CleanSession, last_will_topic=LWTopic, last_will_msg=LWMsg, last_will_retain=LWRet,
     last_will_qos=LWQoS, proto_version=ProtoVer, keepalive_interval=Int}) ->
     Frame = #mqtt_connect{
         proto_ver = ProtoVer,
@@ -537,7 +539,7 @@ send_connect(State= #state{transport={Transport, _}, sock=Sock, username=Usernam
         clean_session = CleanSession,
         keep_alive = Int div 1000,
         client_id = ClientId,
-        will_retain = (LWTopic /= undefined) and (LWMsg /= undefined),
+        will_retain = LWRet,
         will_qos   = case (LWTopic /= undefined) and (LWMsg /= undefined) of
                          true when is_integer(LWQoS) -> LWQoS;
                          _ -> 0

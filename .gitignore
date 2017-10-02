@@ -3,3 +3,4 @@
 *.app
 deps
 .rebar
+_build
