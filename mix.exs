@@ -11,6 +11,7 @@ defmodule VMQCommons.Mixfile do
       deps: deps(),
       package: package(),
       name: "EMQTT Commons",
+      description: "OBSOLETE commons for MQTT"
     ]
   end
 
@@ -25,6 +26,11 @@ defmodule VMQCommons.Mixfile do
   end
 
   defp package do
-    []
+    [
+      licenses: ["Apache 2.0.0"],
+      maintainers: ["konnorrigby@gmail.com"],
+      links: %{"github" => "https://github.com/farmbot-labs/vmq_commons"},
+      name: "VMQ Commons"
+    ]
   end
 end
