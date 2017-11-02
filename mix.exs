@@ -4,7 +4,7 @@ defmodule VMQCommons.Mixfile do
 
   def project do
     [
-      app: :vmq_commons,
+      app: :vmq_commons_fb,
       compilers: Mix.compilers ++ [:erlang],
       version: @version,
       elixir: "~> 1.4",
@@ -30,7 +30,6 @@ defmodule VMQCommons.Mixfile do
       licenses: ["Apache 2.0.0"],
       maintainers: ["konnorrigby@gmail.com"],
       links: %{"github" => "https://github.com/farmbot-labs/vmq_commons"},
-      name: "VMQ Commons"
     ]
   end
 end
