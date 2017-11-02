@@ -1,6 +1,6 @@
 defmodule VMQCommons.Mixfile do
   use Mix.Project
-  @version "1.0.1"
+  @version "1.0.2"
 
   def project do
     [
@@ -29,6 +29,7 @@ defmodule VMQCommons.Mixfile do
     [
       licenses: ["Apache 2.0.0"],
       maintainers: ["konnorrigby@gmail.com"],
+      files: ["include", "src", "LICENSE.txt", "mix.exs", "readme.md"]
       links: %{"github" => "https://github.com/farmbot-labs/vmq_commons"},
     ]
   end
